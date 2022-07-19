@@ -19,14 +19,20 @@ export default {
       month: 1,
     };
   },
-  watch: {
-    month(x) {
-      if (isNaN(x) == true) {
-        alert("문자 입력 ㄴㄴ");
-        this.month = 1;
-      }
-    },
+  updated() {
+    if (this.month === 2) {
+      alert("2 ㄴㄴ");
+      this.month = 1;
+    }
   },
+  // watch: {
+  //   month(x) {
+  //     if (isNaN(x) == true) {
+  //       alert("문자 입력 ㄴㄴ");
+  //       this.month = 1;
+  //     }
+  //   },
+  // },
   props: {
     rooms: Array,
     isModal: Boolean,

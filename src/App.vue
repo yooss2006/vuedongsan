@@ -3,17 +3,23 @@
   <div v-else-if="1 == 1">하하</div>
   <div v-else>놉</div> -->
 
-  <Modal
-    :isModal="isModal"
-    :rooms="rooms"
-    :clickNumber="clickNumber"
-    @closeModal="isModal = false"
-  />
+  <transition name="fade">
+    <Modal
+      :isModal="isModal"
+      :rooms="rooms"
+      :clickNumber="clickNumber"
+      @closeModal="isModal = false"
+    />
+  </transition>
   <div class="menu">
     <a v-for="(a, index) in menus" :key="index">{{ a }}</a>
   </div>
-  <div v-if="isModal"></div>
-  <Discount />
+  <Discount v-if="showDiscount === true" />
+
+  <button @click="priceSort">가격순 정렬</button>
+  <button @click="priceReverseSort">가격 역순 정렬</button>
+  <button @click="priceTitleSort">가나다 정렬</button>
+  <button @click="sortBack">되돌리기</button>
   <Card
     :rooms="rooms"
     @openModal="
@@ -32,7 +38,9 @@ export default {
   name: "App",
   data() {
     return {
+      showDiscount: true,
       clickNumber: 0,
+      originalRooms: [...data],
       rooms: data,
       isModal: false,
       number: [0, 0, 0],
@@ -44,14 +52,37 @@ export default {
     increase(i) {
       this.number[i] += 1;
     },
-    handleIsModal() {
-      this.isModal = this.isModal ? false : true;
+    priceSort() {
+      this.rooms.sort((a, b) => {
+        return a.price - b.price;
+      });
     },
-    titleClick(num) {
-      this.isModal = true;
-      this.clickNumber = num;
+    priceReverseSort() {
+      this.rooms.sort((a, b) => {
+        return b.price - a.price;
+      });
+    },
+    priceTitleSort() {
+      this.rooms.sort((a, b) => {
+        if (a.title < b.title) return -1;
+        if (a.title > b.title) return 1;
+        if (a.title === b.title) return 0;
+        else return -1;
+      });
+    },
+    sortBack() {
+      this.rooms = [...this.originalRooms];
     },
   },
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.showDiscount = false;
+  //   }, 2000);
+  // },
+
+  //서버에서 데이터 가져올 때
+  created() {},
+
   components: {
     Discount,
     Modal,
@@ -61,6 +92,25 @@ export default {
 </script>
 
 <style>
+.fade-leave-from {
+  opacity: 1;
+}
+.fade-leave-active {
+  transition: all 1s;
+}
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-from {
+  opacity: 0;
+}
+.fade-enter-active {
+  transition: all 1s;
+}
+.fade-enter-to {
+  opacity: 1;
+}
+
 body {
   margin: 0;
 }
