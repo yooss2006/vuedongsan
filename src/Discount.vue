@@ -13,6 +13,7 @@ export default {
     };
   },
   mounted() {
+    console.log(this.discount);
     let interval = setInterval(() => {
       this.discount = this.discount - 1;
       if (this.discount <= 0) {
