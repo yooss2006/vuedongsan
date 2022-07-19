@@ -1,26 +1,39 @@
 <template>
-  <div class="black-bg" v-if="isModal" @click="isModal = false">
-    <div class="white-bg">
-      <h4>상세페이지</h4>
-      <p>상세페이지내용임</p>
-    </div>
-  </div>
+  <!-- <div v-if="1 == 2">하이</div>
+  <div v-else-if="1 == 1">하하</div>
+  <div v-else>놉</div> -->
+
+  <Modal
+    :isModal="isModal"
+    :rooms="rooms"
+    :clickNumber="clickNumber"
+    @closeModal="isModal = false"
+  />
   <div class="menu">
     <a v-for="(a, index) in menus" :key="index">{{ a }}</a>
   </div>
-  <div v-for="(a, i) in products.length" :key="i">
-    <img src="./assets/room1.jpg" />
-    <h4 @click="isModal = true">{{ products[i] }}</h4>
-    <p>50 만원</p>
-    <button @click="increase(i)">허위매물신고</button>
-    <span>신고 수 : {{ number[i] }}</span>
-  </div>
+  <div v-if="isModal"></div>
+  <Discount />
+  <Card
+    :rooms="rooms"
+    @openModal="
+      isModal = true;
+      clickNumber = $event;
+    "
+  />
 </template>
 <script>
+import data from "./assets/data";
+import Discount from "./Discount.vue";
+import Modal from "./Modal.vue";
+import Card from "./Card.vue";
+
 export default {
   name: "App",
   data() {
     return {
+      clickNumber: 0,
+      rooms: data,
       isModal: false,
       number: [0, 0, 0],
       menus: ["Home", "Shop", "About"],
@@ -31,8 +44,19 @@ export default {
     increase(i) {
       this.number[i] += 1;
     },
+    handleIsModal() {
+      this.isModal = this.isModal ? false : true;
+    },
+    titleClick(num) {
+      this.isModal = true;
+      this.clickNumber = num;
+    },
   },
-  components: {},
+  components: {
+    Discount,
+    Modal,
+    Card,
+  },
 };
 </script>
 
